@@ -1,4 +1,4 @@
-import { default as seagulls } from '../../seagulls.js'
+import { default as seagulls } from '../../gulls.js'
 
 const sg      = await seagulls.init(),
       frag    = await seagulls.import( './frag.wgsl' ),
