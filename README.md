@@ -95,6 +95,7 @@ a shader pipeline. It expects a JS object with the following properites:
   - `onframe` (optional): A function that will be executed on the CPU everytime the shader is run.
 Use this to, for example, update shader uniform values.
   - `dispatch`: A JavaScript array representing the intended dispatch count of the compute shader.
+  - `times`: The number of times to run the compute shader per execution of the full shader pipeline. You can use this to speed up simulations that would otherwise run slowly, like reaction diffusion.
 
 ### Run a pipeline
 - `sg.run( ...passes )`. Run a series of shader passes indefinitely, where each argument to the function
