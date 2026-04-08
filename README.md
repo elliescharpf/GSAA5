@@ -60,7 +60,7 @@ to `gulls.init()`. From there, methods consist of one of three types:
 3. Running a pipeline of shader passes.
 
 ### Class methods
-- `sg.init()`. An asynchronous method that creates a WebGPU canvas and initializes it.
+- `sg.init( shouldFillScreen=true )`. An asynchronous method that creates a WebGPU canvas and initializes it. By default, gulls fills the entire window, but you can pass `false` to this function to have it keep the initial canvas size, as determined by the width and height attributes specified in html.
 - `sg.import( filename )`. An asynchrnous method that loads a shader from a serer as a string.
 
 ### Data
@@ -68,7 +68,7 @@ to `gulls.init()`. From there, methods consist of one of three types:
 can be used to create a shader pass.
 - `sg.buffer( Float32Array )`. This method returns a gulls buffer. The buffer will
 be transferred to the GPU with whatever underlying values it contains at the time this method is
-called. Note that even if you are using a single value, you must still pass a `Float32Array` of length `1`. 
+called. Note that even if you are using a single value, you must still pass a `Float32Array` of length `1`. The resulting `buffer` object will have a `clear()` method to reset it to 0, and a `write( data, readOffset, writeOffset, size)` 
 - `sg.texture( TypedArray, textureFormat='brga8uorm' )`. This creates a texture to read from. By default the texture will be the same size as the webgpu canvas.
 - `sg.sampler()`. This creates a sampler object for sampling textures in shaders, such as the output of `sg.feedback()`.
 - `sg.video()`. This creates a texture using external video elements, such as from a webcam.
