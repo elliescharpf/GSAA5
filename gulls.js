@@ -76,8 +76,8 @@ const gulls = {
     return device
   },
   
-  setupCanvas( device=null, canvas=null ) {
-    if( canvas === null ) canvas = document.getElementsByTagName('canvas')[0]
+  setupCanvas( device=null, fillScreen=true ) {
+    let canvas = document.getElementsByTagName('canvas')[0]
     if( canvas === null ) {
       console.error('could not find canvas to initialize gulls')
       return
@@ -94,8 +94,10 @@ const gulls = {
     })
 
     const devicePixelRatio = window.devicePixelRatio || 1
-    gulls.width  = canvas.width  = Math.floor(window.innerWidth ) // * devicePixelRatio)
-    gulls.height = canvas.height = Math.floor(window.innerHeight) //* devicePixelRatio)
+    if( fillScreen ) {
+      gulls.width  = canvas.width  = Math.floor(window.innerWidth ) // * devicePixelRatio)
+      gulls.height = canvas.height = Math.floor(window.innerHeight) //* devicePixelRatio)
+    }
     canvas.style.height = gulls.height + 'px'
     canvas.style.width  = gulls.width  + 'px'
 
@@ -655,10 +657,10 @@ const gulls = {
     return passDesc.step
   },
 
-  async init( ) {
+  async init( fillScreen=true ) {
     const device = await gulls.getDevice()
 
-    const [canvas, context, presentationFormat] = gulls.setupCanvas( device )
+    const [canvas, context, presentationFormat] = gulls.setupCanvas( device, fillScreen )
     const view = context.getCurrentTexture().createView()
 
     const instance = Object.create( gulls.proto )
@@ -699,12 +701,15 @@ const gulls = {
         )
       }
 
-      buffer.write = ( buffer, readStart=0, writeStart=0, length=-1 ) => {
+
+      // buffer, bufferWriteOffset, data, dataReadOffset, size)
+      buffer.write = ( data, readStart=0, writeStart=0, size ) => {
         this.device.queue.writeBuffer(
           __buffer, 
-          readStart, 
-          __buffer, 
-          writeStart 
+          writeStart, 
+          data, 
+          readStart,
+          size
           //length === -1 ? __buffer.length * mult : length
         )
       }
