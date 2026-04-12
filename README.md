@@ -70,6 +70,7 @@ can be used to create a shader pass.
 be transferred to the GPU with whatever underlying values it contains at the time this method is
 called. Note that even if you are using a single value, you must still pass a `Float32Array` of length `1`. The resulting `buffer` object will have a `clear()` method to reset it to 0, and a `write( data, readOffset, writeOffset, size)` 
 - `sg.texture( TypedArray, textureFormat='brga8uorm' )`. This creates a texture to read from. By default the texture will be the same size as the webgpu canvas.
+- `async sg.image( string:url, shouldFlipY=false )`. This asynchronous function downloads an image from the provided url and returns a texture object. Make sure you put an `await` keyword in front of any call to this function so that your program waits for the image to be downloaded before trying to include this in a pipeline. 
 - `sg.sampler()`. This creates a sampler object for sampling textures in shaders, such as the output of `sg.feedback()`.
 - `sg.video()`. This creates a texture using external video elements, such as from a webcam.
 - `sg.pingpong( sg.buffer, sg.buffer )`. Many simulations require ping-ponging buffers, so that
