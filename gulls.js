@@ -158,8 +158,8 @@ const gulls = {
     return buffer
   },
 
-  createUniformBuffer( device, values, label='seagull uniforms' ) {
-    const arr = new Float32Array(values)
+  createUniformBuffer( device, values, type=Float32Array, label='seagull uniforms' ) {
+    const arr = new type(values)
 
     const buff = device.createBuffer({
       label: label + (Math.round( Math.random() * 100000 )),
@@ -380,7 +380,7 @@ const gulls = {
     return bindGroups
   },
 
-  async createRenderPipeline( device, code, presentationFormat, vertexBufferLayout, bindGroupLayout, data, shouldBlend=false ) {
+  async createRenderPipeline( device, code, presentationFormat, vertexBufferLayout=null, bindGroupLayout, data, shouldBlend=false ) {
     const module = device.createShaderModule({
       label: 'main render',
       code
@@ -423,17 +423,19 @@ const gulls = {
       bindGroupLayouts
     })
 
+    const vertexLayout = {
+      module
+    }
+    if( vertexBufferLayout !== null ) {
+      vertexLayout.buffers = [ vertexBufferLayout ]
+    }
+
     const pipeline = device.createRenderPipeline({
       label: "render pipeline",
       layout:pipelineLayout,
-      vertex: {
-        module,
-        entryPoint: "vs",
-        buffers: [vertexBufferLayout]
-      },
+      vertex: vertexLayout,
       fragment: {
         module,
-        entryPoint: "fs",
         targets: [{
           format: presentationFormat,
           blend: shouldBlend ? CONSTANTS.blend : undefined
@@ -450,7 +452,9 @@ const gulls = {
           blend  = props.blend
 
     const vertices = props.vertices
-    const [vertexBuffer, vertexBufferLayout] = gulls.createVertexBuffer2D( device, vertices )
+    let vertexBuffer, vertexBufferLayout
+    if( typeof vertices !== 'number' ) 
+      [vertexBuffer, vertexBufferLayout] = gulls.createVertexBuffer2D( device, vertices )
 
     const renderLayout = gulls.createBindGroupLayout( device, props.data )
 
@@ -597,6 +601,8 @@ const gulls = {
       }]
     }
     
+    const useVertexBuffer = typeof passDesc.vertices !== 'number'
+
     const videos   = passDesc.data !== null 
             ? passDesc.data.filter( d => d.type === 'video' ) 
             : null
@@ -618,7 +624,8 @@ const gulls = {
       
       externalTextureBindGroup = gulls.getExternalVideo( passDesc, externalLayout, videos )
     }
-        // in case we want a backbuffer etc. eventually this should probably be
+    
+    // in case we want a backbuffer etc. eventually this should probably be
     // replaced with a more generic post-processing setup
     let swapChainTexture = null
     if( shouldCopy ) {
@@ -629,7 +636,8 @@ const gulls = {
     const pass = encoder.beginRenderPass( renderPassDescriptor )
     pass.setPipeline( passDesc.renderPipeline )
 
-    pass.setVertexBuffer( 0, passDesc.vertexBuffer )
+    if( useVertexBuffer )
+      pass.setVertexBuffer( 0, passDesc.vertexBuffer )
 
     // only switch bindgroups if pingpong is needed
     const bindGroupIndex = passDesc.shouldPingPong === true ? passDesc.step++ % 2 : 0
@@ -641,7 +649,7 @@ const gulls = {
     }
     
     // TODO: generalize to 3d
-    pass.draw(passDesc.vertices.length/2, passDesc.count )  
+    pass.draw( useVertexBuffer ? passDesc.vertices.length/2 : passDesc.vertices, passDesc.count )  
     pass.end()
 
     
@@ -651,7 +659,6 @@ const gulls = {
         { texture: passDesc.copy },
         [ gulls.width, gulls.height ]
       )
-
     }
 
     return passDesc.step
@@ -777,10 +784,10 @@ const gulls = {
       return buffer
     },
 
-    uniform( __value, type='float' ) {
+    uniform( __value, type=Float32Array, label ) {
       const value = Array.isArray( __value ) ? __value : [ __value ]
-      const buffer = gulls.createUniformBuffer( this.device, value, type )
-      const storage = new Float32Array( value )
+      const buffer = gulls.createUniformBuffer( this.device, value, type, label )
+      const storage = new type( value )
       const device = this.device
 
       if( Array.isArray( __value ) ) {
