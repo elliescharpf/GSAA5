@@ -13,7 +13,7 @@ These files are the best places to go to understand how gulls work.
 4. [*Mouse coordinates*](https://charlieroberts.github.io/gulls/howtos/4_mouse_coordinates) - sending mouse position and left click status to the fragment shader as a uniform
 5. [*Tweakpane*](https://charlieroberts.github.io/gulls/howtos/5_tweakpane) using the Tweakpane system to add a GUI to control our shader
 6. [*Audio*](https://charlieroberts.github.io/gulls/howtos/6_audio) - using the Audio helper to send FFT analysis of incoming audio to gulls to the fragment shader.
-7. [*Read texture*](https://charlieroberts.github.io/gulls/howtos/7_readtexture) - Read from a texture.
+7. [*Read texture*](https://charlieroberts.github.io/gulls/howtos/7_readtexture) - Read from a fullscreen texture.
 8. [*Feedback*](https://charlieroberts.github.io/gulls/howtos/8_feedback) - a simple mouse-driven feedback example.
 9. [*Video Feedback*](https://charlieroberts.github.io/gulls/howtos/9_video_feedback) - how to use live video feeds + feedback together
 10. [*Simplest Compute*](https://charlieroberts.github.io/gulls/howtos/10_simplest_compute) - Using a compute shader to incremeent a single number, which in turn is used to determine the color of all pixels in a fragment shader.
@@ -22,3 +22,4 @@ These files are the best places to go to understand how gulls work.
 13. [*Many particles*](https://charlieroberts.github.io/gulls/howtos/13_many_particles) - Many particles driven by compute + vertex shaders.
 14. [*Post-processing*](https://charlieroberts.github.io/gulls/howtos/14_postprocessing) - Demonstrates how to render to texture and then color process the results.
 15. [*Multipass post-processing*](https://charlieroberts.github.io/gulls/howtos/15_postprocessing_twopassblur) -A two-pass gaussian blur post-processing effect.
+16. [*Read an image*](https://charlieroberts.github.io/gulls/howtos/16_read_image) - Asynchronously load and display an image.
