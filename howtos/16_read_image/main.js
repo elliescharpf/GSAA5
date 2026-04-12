@@ -1,4 +1,4 @@
-import { default as gulls } from '../gulls.js'
+import { default as gulls } from '../../gulls.js'
 
 const W = window.innerWidth, H = window.innerHeight
 
