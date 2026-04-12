@@ -883,12 +883,42 @@ const gulls = {
       return texture
     },
 
-    texture( tex, format=null, usage=GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.STORAGE_BINDING, type='texture' ) {
+    async image( url, flipY=false ) {
+      const res  = await fetch( url, { mode:'cors' }),
+            blob = await res.blob(),
+            tex  = await createImageBitmap(blob, { colorSpaceConversion: 'none' })
+
+      const texture = this.device.createTexture({
+        label: 'test',
+        format: 'rgba8unorm',
+        size: [tex.width, tex.height],
+        usage: GPUTextureUsage.TEXTURE_BINDING |
+          GPUTextureUsage.COPY_DST |
+          GPUTextureUsage.RENDER_ATTACHMENT,
+      })
+
+      this.device.queue.copyExternalImageToTexture(
+        { source:tex, flipY },
+        { texture },
+        { width:tex.width, height:tex.height }
+      )
+
+      // needed by gulls to create bindgroup layout entry
+      texture.type = 'texture'
+
+      return texture
+    },  
+
+    texture( tex, format=null, usage=GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.STORAGE_BINDING, type='texture', width=null, height=null ) {
       if( format === null ) format = CONSTANTS.textureFormat
 
       if( format === CONSTANTS.textureFormat ) usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT 
 
-      const texture = gulls.createTexture( this.device, format, [this.width, this.height], usage )
+      const dims = width === null
+        ? [this.width, this.height]
+        : [width,height]
+
+      const texture = gulls.createTexture( this.device, format, dims, usage )
       texture.type = type 
       texture.src = tex
       
@@ -897,7 +927,7 @@ const gulls = {
       const bytesPerElement = numChannels //* tex.BYTES_PER_ELEMENT
       //console.log( numElements, numChannels, bytesPerElement )
       
-      
+     
       this.device.queue.writeTexture(
         { texture }, 
         tex,
