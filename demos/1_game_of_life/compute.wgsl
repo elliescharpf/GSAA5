@@ -2,17 +2,16 @@
 @group(0) @binding(1) var<storage> statein: array<f32>;
 @group(0) @binding(2) var<storage, read_write> stateout: array<f32>;
 
-fn index( x:i32, y:i32 ) -> u32 {
-  let _res = vec2i(res);
-  return u32( (y % _res.y) * _res.x + ( x % _res.x ) );
+fn index( x:u32, y:u32 ) -> u32 {
+  let _res = vec2u(res);
+  return y * _res.x + x;
 }
 
 @compute
 @workgroup_size(8,8)
-fn cs( @builtin(global_invocation_id) _cell:vec3u ) {
-  let cell = vec3i(_cell);
-
+fn cs( @builtin(global_invocation_id) cell:vec3u ) {
   let i = index(cell.x, cell.y);
+
   let activeNeighbors = statein[ index(cell.x + 1, cell.y + 1) ] +
                         statein[ index(cell.x + 1, cell.y)     ] +
                         statein[ index(cell.x + 1, cell.y - 1) ] +

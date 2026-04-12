@@ -3,7 +3,7 @@
 
 @fragment 
 fn fs( @builtin(position) pos : vec4f ) -> @location(0) vec4f {
-  let idx : u32 = u32( pos.y * res.x + pos.x );
+  let idx = u32(pos.y) * u32(res.x) + u32(pos.x);
   let v = state[ idx ];
   return vec4f( v,v,v, 1.);
 }
