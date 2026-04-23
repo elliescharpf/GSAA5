@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <script src='main.js' type='module'></script>
+    <style>
+        body { margin: 0 }
+        #controls {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        button {
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        button:hover { background: rgba(255,255,255,0.2); }
+    </style>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+</head>
+<body>
+<canvas></canvas>
+<div id="controls">
+    <button onclick="setPreset(0)">Original</button>
+    <button onclick="setPreset(1)">Behavior 1</button>
+    <button onclick="setPreset(2)">Behavior 2</button>
+</div>
+</body>
+</html>
